@@ -4,14 +4,43 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-
+import processing.core.PApplet;
 /**
  * Created by Gary on 16/5/28.
  */
-public class Server implements Runnable{
+public class Server extends PApplet{
     private Thread thread;
+    public String s="";
     private ServerSocket servSock;
+    public void setup(){
+    	size(300, 200);
+		smooth();
+    }
+    public void draw(){
+            try{
+                // After client connected, create client socket connect with client
+                Socket clntSock = servSock.accept();
+                InputStream in = clntSock.getInputStream();
 
+                System.out.println("Connected!!");
+
+                // Transfer data
+                byte[] b = new byte[1024];
+                int length;
+
+                length = in.read(b);
+                s = new String(b);
+                System.out.println("[Server Said]" + s);
+
+                background(255);
+            	fill(100, 50, 25);
+            	text(s,10,10);
+            }
+            catch(Exception e){
+                System.out.println("Error: "+e.getMessage());
+            }
+        
+    }
     public Server(){
 
 
@@ -28,15 +57,15 @@ public class Server implements Runnable{
             thread = new Thread(this);
             thread.start();
         } catch (java.io.IOException e) {
-            System.out.println("Socketå•Ÿå‹•æœ‰å•é¡Œ !");
+            System.out.println("Socket??Ÿå?•æ?‰å?é?? !");
             System.out.println("IOException :" + e.toString());
         } finally{
 
         }
     }
 
-    @Override
-    public void run(){
+    
+    /*public void run(){
         // Running for waitting multiple client
         while(true){
             try{
@@ -51,13 +80,12 @@ public class Server implements Runnable{
                 int length;
 
                 length = in.read(b);
-                String s = new String(b);
+                s = new String(b);
                 System.out.println("[Server Said]" + s);
-
             }
             catch(Exception e){
                 //System.out.println("Error: "+e.getMessage());
             }
         }
-    }
+    }*/
 }
